@@ -1,152 +1,196 @@
-# python-assignment-3
-Having fun trying to translate my Java Assignments to Python - Part 2
+# Assignment 3 - User Validation with CSV File in Python
 
+## **Overview**
+This project is a Python implementation of **Assignment #3** from Coders Campus, which involves validating user login credentials by reading from a CSV file. The original assignment was written in Java, and I translated it into Python while ensuring it maintained the same behavior.
 
-## Assignment #3: User Validation with CSV File
+---
 
-### Requirements (as a Java assignment):
+## **Original Java Assignment Instructions**
 
-The goal for this assignment will be to mimic a user login from a Java console application.
-You will prompt a user for a username and a password, and then use the inputs you receive to validate whether or not the username / password combination is valid.
-In order to validate this username / password combination, you'll need to read this information from a file (called "data.txt") and import the data into your Java application
-You are given a data.txt file
+### **Objective**
+Create a **user login system** where users input their **username and password**, and the program validates them against stored credentials from a file (`data.txt`).
 
-You should create a User Object that will store the information that will be read from the file.
-The User Object should contain three properties:
+### **Requirements**
+1. **Store user information** in a file (`data.txt`) and read it into the application.
+2. **Create a `User` object** with three properties:
+   - `username`
+   - `password`
+   - `name`
+3. **Read data from the file into an array of `User` objects`**.
+4. **Prompt the user for login credentials** using `Scanner` (Java) or `input()` (Python).
+5. **Validate credentials:**
+   - **Username is case-insensitive**.
+   - **Password is case-sensitive**.
+6. **Login Flow:**
+   - If the credentials match, display: `Welcome {User's Name}` and exit.
+   - If incorrect, prompt again (up to **5 attempts**).
+   - If the user fails after 5 attempts, display: `Too many failed login attempts, you are now locked out.` and exit.
 
-  1. username
-  2. password
-  3. name
-
-- The file information should be stored in your Java application as an Array of User objects.
-- Once this data is appropriately stored in your Java application, you can begin the process of prompting for username and password.
-- Using a Scanner, you can ask the user for a username and password (this is kind of like a real-world application where you would be presented with a login screen). But for our purposes, we'll be using the console to collect the user's input.
-- Once you've collected a username and a password via your Scanner, you can begin the process of validating this input against our Array of User objects.
-- You will need to iterate through the User objects and check to see if the username/password inputs that you received via the Scanner match any of the User objects in your Array. See the "Determining a Match" section below for info on how to determine if there's a valid match or not.
-
-- If a match is found then you should display a message that says:
+### **Matching Rules**
+✅ **Valid match:**
+```plaintext
+Input:  TREVOR@CRAFTYCODR.COM
+Stored: trevor@craftycodr.com
+✅ MATCH
 ```
-Welcome {insert user's name here}
+❌ **Invalid match:**
+```plaintext
+Input:  trevor.page@craftycodr.com
+Stored: trevor@craftycodr.com
+❌ NO MATCH
 ```
-Note: you should populate the {insert user's name here} portion with the name of the User which matches the inputted username/password.
+✅ **Valid password match:**
+```plaintext
+Input:  test123
+Stored: test123
+✅ MATCH
+```
+❌ **Invalid password match:**
+```plaintext
+Input:  Test123
+Stored: test123
+❌ NO MATCH
+```
 
-- Once a user has successfully logged in, the program can terminate.
-
-- If no match is found then you should display a message that says:
-```
-Invalid login, please try again.
-```
-
-- In the event that there's an invalid login attempt, the user should only be given 5 chances in total to login. If the user fails to login after their 5th attempt, the program should output a message that states:
-```
+### **Sample Output**
+#### **Use Case #1: Too Many Failed Logins**
+```plaintext
+Enter your email:
+test@test.com
+Enter your password:
+asdfasdf
+Invalid login, please try again
+...
 Too many failed login attempts, you are now locked out.
 ```
-And the program should terminate.
-
-
-### Determining a Match
-A match is found when two conditions are met:
-
-  1. The inputted username is a case insensitive match with the username property in the User object
-  2. The inputted password is a case sensitive match with the password property in the User object.
-
-For example:
-
-inputted username = TREVOR@CRAFTYCODR.COM
-User object's username = trevor@craftycodr.com
-**MATCH**
-
-inputted username = trevor.page@craftycodr.com
-User object's username = trevor@craftycodr.com
-**NO MATCH**
-
-inputted password = test123
-User object's password = test123
-**MATCH**
-
-inputted password = Test123
-User object's password = test123
-**NO MATCH**
-
-
-### Program Design
-
-The goal of this assignment is to start to use our own Classes and get comfortable with them.
-
-You should make use of a UserService class that will help with things like validating if the inputted username/password matches what's in our User Array. It should also provide the service of reading the data from the file and creating the User Array.
-
-You should also make sure to create a User POJO Class as defined near the beginning of this document.
-
-The rest of the logic can be held inside of a UserLoginApplication Class, which houses the "public static void main" method.
-
-Reminder: When you've completed this assignment you must submit it for review via the assignment submission app(you can use the same credentials to login there as you've used to login here)
-
-  
-### Sample Output
-Use Case #1: User attempts too many failed logins and is locked out:
-```
+#### **Use Case #2: Successful Login**
+```plaintext
 Enter your email:
-
-test@test.com
-
-Enter your password:
-
-asdfasdf
-
-Invalid login, please try again
-
-Enter your email:
-
-test@test.com
-
-Enter your password:
-
-asdfasdf
-
-Invalid login, please try again
-
-Enter your email:
-
-test@test.com
-
-Enter your password:
-
-asdfasdf
-
-Invalid login, please try again
-
-Enter your email:
-
-test@test.com
-
-Enter your password:
-
-asdfasdf
-
-Too many failed login attempts, you are now locked out.
-```
-
-Use Case #2: User successfully logs in
-```
-Enter your email:
-
-test@test.com
-
-Enter your password:
-
-asdfasdf
-
-Invalid login, please try again
-
-Enter your email:
-
 john.doe@mydomain.net
-
 Enter your password:
-
 Hdk398jf!
-
 Welcome: John Doe
 ```
 
+---
+
+## **Translating This to Python**
+### **Challenges & Lessons Learned**
+
+### **1️⃣ Java’s `Scanner` vs. Python’s `input()`**
+- Java requires `Scanner` to read user input.
+- Python’s `input()` handles it more concisely:
+  ```python
+  username = input("Enter your username: ")
+  ```
+
+### **2️⃣ Reading CSV File Instead of `data.txt`**
+- In Java, we might use a `BufferedReader` to read a text file.
+- In Python, `csv.reader` makes this process cleaner:
+  ```python
+  with open('data.txt', mode='r') as csvfile:
+      reader = csv.reader(csvfile)
+      for row in reader:
+          users.append(User(row[0], row[1], row[2]))
+  ```
+
+### **3️⃣ Case-Insensitive Username Matching**
+- Java might use `.equalsIgnoreCase()`, but in Python, we use `.casefold()`:
+  ```python
+  username.casefold() == user.username.casefold()
+  ```
+
+---
+
+## **Python Implementation**
+
+### **`user.py`** (User Data Model)
+```python
+class User:
+    def __init__(self, username, password, name):
+        self.username = username.casefold()
+        self.password = password
+        self.name = name
+
+    def __repr__(self):
+        return f'User({self.username}, {self.password}, {self.name})'
+```
+
+### **`file_service.py`** (Loading Users from File)
+```python
+import csv
+from user import User
+
+def create_user():
+    users = []
+    try:
+        with open ('data.txt', mode='r') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                users.append(User(row[0], row[1], row[2]))
+    except FileNotFoundError:
+        print('The file "data.txt" was not found.')
+    return users
+```
+
+### **`user_service.py`** (Authentication Logic)
+```python
+from file_service import create_user
+
+users = create_user()
+
+def login(username, password):
+    username = username.casefold()
+    for user in users:
+        if user.username == username and user.password == password:
+            return user
+    return None
+```
+
+### **`login_service.py`** (Handling Login Attempts)
+```python
+from user_service import login
+
+def login_attempt():
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+    return login(username, password)
+
+def login_app():
+    for attempt in range(5):
+        user = login_attempt()
+        if user:
+            print(f"Welcome, {user.name}!")
+            return
+        print("Invalid username or password. Please try again.")
+    print("Too many failed attempts. You've been locked out.")
+```
+
+### **`main.py`** (Entry Point)
+```python
+from login_service import login_app
+
+if __name__ == "__main__":
+    login_app()
+```
+
+---
+
+## **Conclusion**
+✅ Successfully implemented a **user authentication system in Python** that mimics the Java version.  
+✅ Learned key differences between **file handling, case sensitivity, and input validation** in Java vs. Python.  
+✅ **Python’s `casefold()` makes case-insensitive comparisons cleaner than Java’s `.equalsIgnoreCase()`.**  
+
+**Next steps:** Improve error handling, add password hashing for security, and implement a **better user management system!** 🚀🐍
+
+---
+
+**🛠️ Built With:**
+- Python 3
+- No external libraries (pure Python implementation)
+
+📌 **Author:** [Your Name]  
+📌 **GitHub Repo:** [Your Repo Link]
+
+🚀 **Excited for the next assignment!**
 
